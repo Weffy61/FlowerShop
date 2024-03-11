@@ -23,7 +23,7 @@ class Bouquet(models.Model):
     size_height = models.SmallIntegerField(verbose_name='Высота букета')
     size_width = models.SmallIntegerField(verbose_name='Ширина букета')
     category = models.ManyToManyField(
-        'FlowerCategory',
+        'BouquetCategory',
         verbose_name='Категория букета',
         related_name='bouquets'
     )
@@ -36,8 +36,15 @@ class Bouquet(models.Model):
         return f'Букет {self.name}'
 
 
-class FlowerCategory(models.Model):
+class BouquetCategory(models.Model):
     name = models.CharField(verbose_name='Наименование категории', max_length=200)
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return f'Категория {self.name}'
 
 
 class Order(models.Model):
@@ -45,7 +52,7 @@ class Order(models.Model):
     client_name = models.CharField(verbose_name='Имя клиента', max_length=200)
     phone_number = PhoneNumberField(verbose_name='Телефон')
     delivery_address = models.TextField(verbose_name='Адрес доставки')
-    payment_status = models.BooleanField(verbose_name='Статус оплаты', default=False)
+    payment_status = models.BooleanField(verbose_name='Оплачен', default=False)
     DELIVERY_TIME_CHOICES = (
         ('as_soon_as_possible', 'Как можно скорее'),
         ('10_to_12', 'С 10:00 до 12:00'),
@@ -79,3 +86,18 @@ class Courier(models.Model):
 
     def __str__(self):
         return f'ID курьера {self.tg_id}'
+
+
+class ConsultationRequest(models.Model):
+    name = models.CharField(verbose_name='Имя', max_length=255)
+    phone_number = PhoneNumberField(verbose_name='Телефон')
+    question = models.TextField(verbose_name='Вопрос', blank=True, null=True, default='')
+    date = models.DateField(verbose_name='Дата', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Консультация'
+        verbose_name_plural = 'Консультации'
+
+    def __str__(self):
+        return self.name
+    
