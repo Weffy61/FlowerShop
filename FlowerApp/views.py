@@ -33,18 +33,3 @@ class ConsultationRequestView(View):
             return redirect('index')
         return render(request, self.template_name, {'consultation_request_form': consultation_request_form})
 
-# def consultation_request(request):
-#     template_name = 'FlowerApp/consultation.html'
-#
-#     if request.method == 'GET':
-#         consultation_request_form = ConsultationRequestForm(request.GET)
-#         return render(request, template_name, {'consultation_request_form': consultation_request_form})
-#     else:
-#         consultation_request_form = ConsultationRequestForm(request.POST)
-#         if consultation_request_form.is_valid():
-#             name = consultation_request_form.cleaned_data['name']
-#             phone_number = consultation_request_form.cleaned_data['phone_number']
-#             ConsultationRequest.objects.create(name=name, phone_number=phone_number)
-#             return redirect('index')
-#         return render(request, template_name, {'consultation_request_form': consultation_request_form})
-
