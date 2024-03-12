@@ -1,8 +1,9 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
 from django.views import View
 
 from FlowerApp.forms import ConsultationRequestForm
-from FlowerApp.models import ConsultationRequest
+from FlowerApp.models import ConsultationRequest, Bouquet
 
 
 def index(request):
@@ -16,7 +17,28 @@ def order(request):
 
 def catalog(request):
     consultation_request_form = ConsultationRequestForm(request.GET)
-    return render(request, 'FlowerApp/catalog.html', {'consultation_request_form': consultation_request_form})
+    bouquets = Bouquet.objects.all()
+    paginator = Paginator(bouquets, 6)
+    page_number = request.GET.get('page', 1)
+    try:
+        bouquets_page = paginator.page(page_number)
+    except PageNotAnInteger:
+        bouquets_page = paginator.page(1)
+    except EmptyPage:
+        bouquets_page = paginator.page(paginator.num_pages)
+
+    bouquet_context = [{
+        'name': bouquet.name,
+        'price': bouquet.price,
+        'img_path': request.build_absolute_uri(bouquet.image.url)
+    } for bouquet in bouquets_page.object_list]
+
+    context = {
+        'bouquets_page': bouquets_page,
+        'bouquet_context': bouquet_context,
+        'consultation_request_form': consultation_request_form
+    }
+    return render(request, 'FlowerApp/catalog.html', context=context)
 
 
 class ConsultationRequestView(View):
