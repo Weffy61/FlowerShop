@@ -91,7 +91,6 @@ class Courier(models.Model):
 class ConsultationRequest(models.Model):
     name = models.CharField(verbose_name='Имя', max_length=255)
     phone_number = PhoneNumberField(verbose_name='Телефон')
-    question = models.TextField(verbose_name='Вопрос', blank=True, null=True, default='')
     date = models.DateField(verbose_name='Дата', auto_now_add=True)
 
     class Meta:
