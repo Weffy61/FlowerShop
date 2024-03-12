@@ -6,7 +6,8 @@ from FlowerApp.models import ConsultationRequest
 
 
 def index(request):
-    return render(request, 'FlowerApp/index.html')
+    consultation_request_form = ConsultationRequestForm(request.GET)
+    return render(request, 'FlowerApp/index.html', {'consultation_request_form': consultation_request_form})
 
 
 def order(request):
