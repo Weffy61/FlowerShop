@@ -15,7 +15,8 @@ def order(request):
 
 
 def catalog(request):
-    return render(request, 'FlowerApp/catalog.html')
+    consultation_request_form = ConsultationRequestForm(request.GET)
+    return render(request, 'FlowerApp/catalog.html', {'consultation_request_form': consultation_request_form})
 
 
 class ConsultationRequestView(View):
