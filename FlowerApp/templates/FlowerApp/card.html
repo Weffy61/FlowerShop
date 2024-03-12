@@ -7,70 +7,67 @@
 {% endblock %}
 
 {% block context %}
-<section id="card">
-  <div class="container">
-    <div class="card ficb">
-      <div class="card__block card__block_first">
-        <img src="{% static "img/cardImg.jpg" %}" alt="img" class="card__img">
-      </div>
-      <div class="card__block card__block_sec">
-        <div class="title">Летнее утро</div>
-        <div class="card__block_price">3 600 руб</div>
-        <div class="card__elems ">
-          <span class="card__elems_intro">Состав</span>
-          <div class="card__items">
-							<span class="card_items_intro">
-								Гортензия розовая - 1 шт.
-							</span>
-            <span class="card_items_intro">
-								Ветки эквалипта - 5 шт.
-							</span>
-            <span class="card_items_intro">
-								Гипсофила - 1 шт.
-							</span>
-            <span class="card_items_intro">
-								Матовая упаковка - 1 шт.
-							</span>
-            <span class="card_items_intro">
-								Лента атласная - 1 шт.
-							</span>
-            <span class="card_items_intro">
-								Рекомендация по уходу - 1 шт.
-							</span>
-            <span class="card_items_intro">
-								Открыточка с вашими пожеланиями - 1 шт.
-							</span>
-            <span class="card_items_intro">
-								Любовь флориста (бесплатно) - 1 шт.
-							</span>
-          </div>
+  <section id="card">
+    <div class="container">
+      <div class="card ficb">
+        <div class="card__block card__block_first">
+          <img src="{{ bouquet_context.img_path }}" alt="img" class="card__img">
         </div>
-        <div class="card__elems ">
-          <span class="card__elems_intro">Размер</span>
-          <div class="card__items">
+        <div class="card__block card__block_sec">
+          <div class="title">{{ bouquet_context.name }}</div>
+          <div class="card__block_price">{{ bouquet_context.price }} руб</div>
+          <div class="card__elems ">
+            <span class="card__elems_intro">Состав</span>
+            <div class="card__items">
 							<span class="card_items_intro">
-								Высота - 50 см
+								{{ bouquet_context.compound }}
 							</span>
-            <span class="card_items_intro">
-								Ширина - 30 см
-							</span>
+            </div>
           </div>
+          <div class="card__elems ">
+            <span class="card__elems_intro">Размер</span>
+            <div class="card__items">
+							<span class="card_items_intro">
+								Высота - {{ bouquet_context.height }} см
+							</span>
+              <span class="card_items_intro">
+								Ширина - {{ bouquet_context.width }} см
+							</span>
+            </div>
+          </div>
+          <button class="btn largeBtn card__btn">Заказать букет</button>
         </div>
-        <button class="btn largeBtn card__btn">Заказать букет</button>
       </div>
     </div>
-  </div>
-</section>
-<section id="consultation">
-  <div class="container">
-    <div class="consultation">
-      <div class="title consultation__title">Оставьте заявку на консультацию</div>
-      <form action="#" class="consultation__form">
-        <input type="text" name="fname" class="consultation__form_input" placeholder="Введите Имя" required>
-        <input type="text" name="tel" class="consultation__form_input" placeholder="+ 7 (999) 000 00 00" required>
-        <button type="submit" class="consultation__form_btn">Отправить</button>
-      </form>
+  </section>
+  <section id="consultation">
+    <div class="container">
+      <div class="consultation">
+        <div class="title consultation__title">Оставьте заявку на консультацию</div>
+        <form action="{% url 'consultation_request' %}" method="post" class="consultation__form">
+          {% csrf_token %}
+          {{ consultation_request_form.name }}
+          {{ consultation_request_form.phone_number }}
+          <button type="submit" class="consultation__form_btn" style="margin-left: 10px">Отправить</button>
+          {% if request.method == 'POST' %}
+            {% if consultation_request_form.phone_number.errors %}
+              <div class="error">{{ consultation_request_form.phone_number.errors }}</div>
+            {% endif %}
+            {% if consultation_request_form.agree_to_privacy_policy.errors %}
+              <div class="error">
+                <ul>
+                  <li>Вы должны согласиться с политикой конфеденциальности</li>
+                </ul>
+              </div>
+            {% endif %}
+          {% endif %}
+          <div class="chekbox fic">
+            <input name="agree_to_privacy_policy" type="checkbox" class="singUpConsultation__ckekbox"
+                   checked>
+            <span class="chekbox__intro">Я согласен(а) с политикой конфидециоальности</span>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 {% endblock %}

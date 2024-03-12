@@ -15,7 +15,7 @@
           <div class="recommended__elems ficb">
             {% for bouquet in bouquet_context %}
               <div class="recommended__block">
-              <a href="#"><img src="{{ bouquet.img_path }}" alt="flower"></a>
+              <a href="{% url 'card' bouquet_id=bouquet.bouquet_id %}"><img src="{{ bouquet.img_path }}" alt="flower"></a>
               <div class="recommended__block_elems ficb">
                 <span class="recommended__block_intro">{{ bouquet.name }}</span>
                 <span class="recommended__block_price">{{ bouquet.price }} руб</span>
@@ -32,7 +32,7 @@
       {% if bouquets_page.has_previous %}
         <a href="?page={{ bouquets_page.previous_page_number }}">предыдущая</a>
       {% endif %}
-      <span class="current">Страница {{ bouquets_page.number }} из {{ bouquets_page.paginator.num_pages }}.</span>
+      <span class="current">Страница {{ bouquets_page.number }} из {{ bouquets_page.paginator.num_pages }}</span>
       {% if bouquets_page.has_next %}
         <a href="?page={{ bouquets_page.next_page_number }}">следующая</a>
       {% endif %}
@@ -46,6 +46,7 @@
           {% csrf_token %}
           {{ consultation_request_form.name }}
           {{ consultation_request_form.phone_number }}
+          <button type="submit" class="consultation__form_btn" style="margin-left: 10px">Отправить</button>
           {% if request.method == 'POST' %}
             {% if consultation_request_form.phone_number.errors %}
               <div class="error">{{ consultation_request_form.phone_number.errors }}</div>
@@ -63,7 +64,6 @@
                    checked>
             <span class="chekbox__intro">Я согласен(а) с политикой конфидециоальности</span>
           </div>
-          <button type="submit" class="consultation__form_btn">Отправить</button>
         </form>
       </div>
     </div>
