@@ -98,16 +98,19 @@ class OrderView(View):
     template_name = 'FlowerApp/order.html'
 
     def get(self, request):
-        referer = request.META.get('HTTP_REFERER')
+        bouquet_id = request.session.get('bouquet_id')
+        if not bouquet_id:
+            return redirect('/')
         order_form = OrderForm(request.GET)
         context = {
-            'referer': referer,
             'order_form': order_form
         }
         return render(request, self.template_name, context)
 
     def post(self, request):
         bouquet_id = request.session.get('bouquet_id')
+        if not bouquet_id:
+            return redirect('/')
         bouquet = Bouquet.objects.get(pk=bouquet_id)
         order_form = OrderForm(request.POST)
         if order_form.is_valid():
