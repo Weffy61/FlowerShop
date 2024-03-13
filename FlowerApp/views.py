@@ -3,12 +3,31 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 from FlowerApp.forms import ConsultationRequestForm
-from FlowerApp.models import ConsultationRequest, Bouquet
+from FlowerApp.models import ConsultationRequest, Bouquet, Store
 
 
 def index(request):
     consultation_request_form = ConsultationRequestForm(request.GET)
-    return render(request, 'FlowerApp/index.html', {'consultation_request_form': consultation_request_form})
+
+    bouquet_context = [{
+        'bouquet_id': bouquet.pk,
+        'name': bouquet.name,
+        'price': bouquet.price,
+        'img_path': request.build_absolute_uri(bouquet.image.url)
+    } for bouquet in Bouquet.objects.order_by('?')[:3]]
+
+    store_context = [{
+        'address': store.address,
+        'phone': store.phone_number
+    } for store in Store.objects.all()]
+
+    context = {
+        'bouquet_context': bouquet_context,
+        'consultation_request_form': consultation_request_form,
+        'store_context': store_context
+    }
+
+    return render(request, 'FlowerApp/index.html', context=context)
 
 
 def order(request):
@@ -77,3 +96,6 @@ class ConsultationRequestView(View):
             return redirect('index')
         return render(request, self.template_name, {'consultation_request_form': consultation_request_form})
 
+
+def quiz(request):
+    return render(request, 'FlowerApp/quiz.html')
