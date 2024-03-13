@@ -3,10 +3,9 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('order/', views.order, name='order'),
+    path('order/', views.OrderView.as_view(), name='order'),
     path('catalog/', views.catalog, name='catalog'),
     path('consultation/', views.ConsultationRequestView.as_view(), name='consultation_request'),
     path('card/<int:bouquet_id>/', views.card, name='card'),
     path('quiz/', views.quiz, name='start_quiz'),
-    path('order/', views.order, name='order')
 ]

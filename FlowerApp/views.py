@@ -2,8 +2,8 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
-from FlowerApp.forms import ConsultationRequestForm
-from FlowerApp.models import ConsultationRequest, Bouquet, Store
+from FlowerApp.forms import ConsultationRequestForm, OrderForm
+from FlowerApp.models import ConsultationRequest, Bouquet, Store, Order
 
 
 def index(request):
@@ -28,11 +28,6 @@ def index(request):
     }
 
     return render(request, 'FlowerApp/index.html', context=context)
-
-
-def order(request):
-    bouquet_id = request.session.get('bouquet_id')
-    return render(request, 'FlowerApp/order.html')
 
 
 def card(request, bouquet_id):
@@ -97,6 +92,37 @@ class ConsultationRequestView(View):
             ConsultationRequest.objects.create(name=name, phone_number=phone_number)
             return redirect('index')
         return render(request, self.template_name, {'consultation_request_form': consultation_request_form})
+
+
+class OrderView(View):
+    template_name = 'FlowerApp/order.html'
+
+    def get(self, request):
+        referer = request.META.get('HTTP_REFERER')
+        order_form = OrderForm(request.GET)
+        context = {
+            'referer': referer,
+            'order_form': order_form
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        bouquet_id = request.session.get('bouquet_id')
+        bouquet = Bouquet.objects.get(pk=bouquet_id)
+        order_form = OrderForm(request.POST)
+        if order_form.is_valid():
+            name = order_form.cleaned_data['name']
+            phone_number = order_form.cleaned_data['phone_number']
+            address = order_form.cleaned_data['address']
+            delivery_time = order_form.cleaned_data['delivery_time']
+            Order.objects.create(
+                bouquet=bouquet,
+                client_name=name,
+                phone_number=phone_number,
+                delivery_address=address,
+                delivery_time=delivery_time)
+            return redirect('/')
+        return render(request, self.template_name, {'order_form': order_form})
 
 
 def quiz(request):
