@@ -124,6 +124,7 @@ class OrderView(View):
                 phone_number=phone_number,
                 delivery_address=address,
                 delivery_time=delivery_time)
+            request.session.pop('bouquet_id', None)
             return redirect('/')
         return render(request, self.template_name, {'order_form': order_form})
 
