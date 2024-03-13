@@ -7,5 +7,6 @@ urlpatterns = [
     path('catalog/', views.catalog, name='catalog'),
     path('consultation/', views.ConsultationRequestView.as_view(), name='consultation_request'),
     path('card/<int:bouquet_id>/', views.card, name='card'),
-    path('quiz/', views.quiz, name='start_quiz')
+    path('quiz/', views.quiz, name='start_quiz'),
+    path('order/', views.order, name='order')
 ]

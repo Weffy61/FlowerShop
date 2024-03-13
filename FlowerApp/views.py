@@ -31,12 +31,14 @@ def index(request):
 
 
 def order(request):
+    bouquet_id = request.session.get('bouquet_id')
     return render(request, 'FlowerApp/order.html')
 
 
 def card(request, bouquet_id):
     bouquet = get_object_or_404(Bouquet, pk=bouquet_id)
     consultation_request_form = ConsultationRequestForm(request.GET)
+    request.session['bouquet_id'] = bouquet.pk
     bouquet_context = {
         'name': bouquet.name,
         'price': bouquet.price,
