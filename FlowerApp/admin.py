@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from FlowerApp.models import Store, Bouquet, BouquetCategory, Order, Courier, ConsultationRequest
+from FlowerApp.models import Store, Bouquet, BouquetCategory, Order, Courier, ConsultationRequest, Budget
 
 
 @admin.register(Store)
@@ -10,8 +10,9 @@ class StoreAdmin(admin.ModelAdmin):
 
 @admin.register(Bouquet)
 class BouquetAdmin(admin.ModelAdmin):
-    fields = ['name', 'price', 'image', 'compound', 'size_height', 'size_width', 'category']
-    raw_id_fields = ['category']
+    fields = ['name', 'price', 'description', 'small_description', 'image', 'compound', 'size_height', 'size_width',
+              'category', 'budget']
+    raw_id_fields = ['category', 'budget']
     list_display = ['name', 'price']
 
 
@@ -39,3 +40,8 @@ class ConsultationRequestAdmin(admin.ModelAdmin):
     list_display = ['name', 'phone_number', 'date']
     search_fields = ['name', 'phone_number']
     list_filter = ['date']
+
+
+@admin.register(Budget)
+class BudgetAdmin(admin.ModelAdmin):
+    fields = ['budget_level', 'budget_from', 'budget_up_to']

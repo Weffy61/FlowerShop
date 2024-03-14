@@ -18,6 +18,8 @@ class Store(models.Model):
 class Bouquet(models.Model):
     name = models.CharField(verbose_name='Название', max_length=200)
     price = models.DecimalField(verbose_name='Цена', max_digits=8, decimal_places=2, validators=[MinValueValidator(1)])
+    description = models.TextField(verbose_name='Описание')
+    small_description = models.TextField(verbose_name='Краткое описаниее')
     image = models.ImageField(verbose_name='Изображение', upload_to='images/')
     compound = models.TextField(verbose_name='Состав')
     size_height = models.SmallIntegerField(verbose_name='Высота букета')
@@ -25,6 +27,12 @@ class Bouquet(models.Model):
     category = models.ManyToManyField(
         'BouquetCategory',
         verbose_name='Категория букета',
+        related_name='bouquets'
+    )
+    budget = models.ForeignKey(
+        'Budget',
+        verbose_name='Бюджет',
+        on_delete=models.CASCADE,
         related_name='bouquets'
     )
 
@@ -99,4 +107,28 @@ class ConsultationRequest(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
+class Budget(models.Model):
+    budget_level = models.CharField(verbose_name='Уровень бюджета', max_length=255)
+    budget_from = models.PositiveIntegerField(
+        verbose_name='Бюджет от',
+        validators=[MinValueValidator(0)],
+        null=True,
+        blank=True
+    )
+    budget_up_to = models.DecimalField(
+        verbose_name='Бюджет до',
+        max_digits=8,
+        decimal_places=2,
+        validators=[MinValueValidator(1)],
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        verbose_name = 'Бюджет'
+        verbose_name_plural = 'Бюджеты'
+
+    def __str__(self):
+        return self.budget_level

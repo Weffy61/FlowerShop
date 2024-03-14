@@ -8,4 +8,6 @@ urlpatterns = [
     path('consultation/', views.ConsultationRequestView.as_view(), name='consultation_request'),
     path('card/<int:bouquet_id>/', views.card, name='card'),
     path('quiz/', views.quiz, name='start_quiz'),
+    path('quiz_step/', views.quiz_step, name='quiz_step'),
+    path('result/', views.quiz_result, name='result')
 ]

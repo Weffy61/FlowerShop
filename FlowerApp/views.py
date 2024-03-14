@@ -1,9 +1,12 @@
+import random
+
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 from FlowerApp.forms import ConsultationRequestForm, OrderForm
-from FlowerApp.models import ConsultationRequest, Bouquet, Store, Order
+from FlowerApp.models import ConsultationRequest, Bouquet, Store, Order, BouquetCategory, Budget
 
 
 def index(request):
@@ -110,7 +113,7 @@ class OrderView(View):
     def post(self, request):
         bouquet_id = request.session.get('bouquet_id')
         if not bouquet_id:
-            return redirect('/')
+            return redirect('index')
         bouquet = Bouquet.objects.get(pk=bouquet_id)
         order_form = OrderForm(request.POST)
         if order_form.is_valid():
@@ -125,9 +128,61 @@ class OrderView(View):
                 delivery_address=address,
                 delivery_time=delivery_time)
             request.session.pop('bouquet_id', None)
-            return redirect('/')
+            return redirect('index')
         return render(request, self.template_name, {'order_form': order_form})
 
 
 def quiz(request):
-    return render(request, 'FlowerApp/quiz.html')
+    bouquet_categories = BouquetCategory.objects.all()
+    return render(request, 'FlowerApp/quiz.html', {'bouquet_categories': bouquet_categories})
+
+
+def quiz_step(request):
+    category_name = request.POST.get('category_name')
+    request.session['category_name'] = category_name
+    budgets = Budget.objects.all()
+    return render(request, 'FlowerApp/quiz-step.html', {'budgets': budgets})
+
+
+def quiz_result(request):
+    category_name = request.session.get('category_name')
+    budget_level = request.POST.get('budget_level')
+    consultation_request_form = ConsultationRequestForm(request.GET)
+
+    if category_name == 'Без повода':
+        bouquets_by_category = Bouquet.objects.all()
+    else:
+        bouquets_by_category = Bouquet.objects.filter(category__name=category_name)
+
+    budget = Budget.objects.get(budget_level=budget_level)
+
+    if budget_level == 'Не имеет значения':
+        bouquets = bouquets_by_category.order_by('?')
+    else:
+        bouquets = bouquets_by_category.filter(
+            Q(budget__budget_from__lte=budget.budget_from) & Q(budget__budget_up_to__gte=budget.budget_up_to)
+        ).order_by('?')
+
+    recommended_bouquet = random.choice(bouquets)
+
+    store_context = [{
+        'address': store.address,
+        'phone': store.phone_number
+    } for store in Store.objects.all()]
+
+    bouquet_context = {
+        'id': recommended_bouquet.pk,
+        'name': recommended_bouquet.name,
+        'price': recommended_bouquet.price,
+        'description': recommended_bouquet.description,
+        'small_description': recommended_bouquet.small_description,
+        'image_path': request.build_absolute_uri(recommended_bouquet.image.url),
+        'compound': recommended_bouquet.compound
+    }
+
+    context = {
+        'store_context': store_context,
+        'recommended_bouquet': bouquet_context,
+        'consultation_request_form': consultation_request_form
+    }
+    return render(request, 'FlowerApp/result.html', context=context)
