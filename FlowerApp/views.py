@@ -7,6 +7,7 @@ from django.views import View
 
 from FlowerApp.forms import ConsultationRequestForm, OrderForm
 from FlowerApp.models import ConsultationRequest, Bouquet, Store, Order, BouquetCategory, Budget
+from FlowerApp.service import create_payment_order
 
 
 def index(request):
@@ -121,14 +122,15 @@ class OrderView(View):
             phone_number = order_form.cleaned_data['phone_number']
             address = order_form.cleaned_data['address']
             delivery_time = order_form.cleaned_data['delivery_time']
-            Order.objects.create(
+            new_order = Order.objects.create(
                 bouquet=bouquet,
                 client_name=name,
                 phone_number=phone_number,
                 delivery_address=address,
                 delivery_time=delivery_time)
             request.session.pop('bouquet_id', None)
-            return redirect('index')
+            payment_url = create_payment_order(amount=bouquet.price, order_num=new_order.pk)
+            return redirect(payment_url)
         return render(request, self.template_name, {'order_form': order_form})
 
 
@@ -186,3 +188,11 @@ def quiz_result(request):
         'consultation_request_form': consultation_request_form
     }
     return render(request, 'FlowerApp/result.html', context=context)
+
+
+def order_confirmation(request):
+    order_number = request.GET.get('order')
+    order = Order.objects.get(pk=order_number)
+    order.payment_status = True
+    order.save()
+    return redirect('index')
