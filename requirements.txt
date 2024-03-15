@@ -4,3 +4,4 @@ django-phonenumber-field==7.3.0
 phonenumbers==8.13.31
 pillow==10.2.0
 yookassa==2.5.0
+pyTelegramBotAPI==4.13.0
