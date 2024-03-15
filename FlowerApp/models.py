@@ -81,12 +81,17 @@ class Order(models.Model):
 
 class Courier(models.Model):
     tg_id = models.BigIntegerField(verbose_name='TG id курьера')
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ', related_name='couriers')
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        verbose_name='Заказ',
+        related_name='couriers',
+        null=True, blank=True)
     STATUS_CHOICES = (
         ('free', 'Free'),
         ('busy', 'Busy')
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='free')
 
     class Meta:
         verbose_name = 'Курьер'
