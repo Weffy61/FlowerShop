@@ -31,6 +31,7 @@ pip install -r requirements.txt
 Доступны следующие переменные:
  - SECRET_KEY - секретный ключ проекта. Например: `erofheronoirenfoernfx49389f43xf3984xf9384`.
  - TELEGRAM_BOT_API - для уведомлений о покупке в телеграм. Создайте бота в [botfather](https://t.me/BotFather).
+ - TG_GROUP_ID - группа в телеграмм для получения заказов. Для того что бы узнать айди группы, нужно добавить [бота](https://t.me/myidbot), и добавить его администратором группы, далее написать /getgroupid.
  - YOOKASSA_SECRET_KEY - ЮKassa секретный ключ. [Что такое YOOKASSA_SECRET_KEY](https://yookassa.ru/docs/support/merchant/payouts/secret-key/).
  - YOOKASSA_SHOP_ID - идентификатор магазина в ЮKassa. [Что такое YOOKASSA_SHOP_ID](https://yookassa.ru/docs/support/merchant/payments/settings).
  - ALLOWED_HOSTS - см [документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
