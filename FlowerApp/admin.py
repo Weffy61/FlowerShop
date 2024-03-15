@@ -11,7 +11,7 @@ class StoreAdmin(admin.ModelAdmin):
 @admin.register(Bouquet)
 class BouquetAdmin(admin.ModelAdmin):
     fields = ['name', 'price', 'description', 'small_description', 'image', 'compound', 'size_height', 'size_width',
-              'category', 'budget']
+              'category', 'budget', 'sell_counter']
     raw_id_fields = ['category', 'budget']
     list_display = ['name', 'price']
     readonly_fields = ['sell_counter']
