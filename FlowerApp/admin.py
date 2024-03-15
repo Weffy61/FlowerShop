@@ -45,3 +45,4 @@ class ConsultationRequestAdmin(admin.ModelAdmin):
 @admin.register(Budget)
 class BudgetAdmin(admin.ModelAdmin):
     fields = ['budget_level', 'budget_from', 'budget_up_to']
+    readonly_fields = ['sell_counter']

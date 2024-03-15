@@ -7,7 +7,7 @@ from django.views import View
 
 from FlowerApp.forms import ConsultationRequestForm, OrderForm
 from FlowerApp.models import ConsultationRequest, Bouquet, Store, Order, BouquetCategory, Budget
-from FlowerApp.service import create_payment_order, send_message_to_courier_bot
+from FlowerApp.service import create_payment_order, send_message_to_courier_bot, add_sell
 
 
 def index(request):
@@ -196,4 +196,5 @@ def order_confirmation(request):
     order.payment_status = True
     order.save()
     send_message_to_courier_bot(order_number)
+    add_sell(order)
     return redirect('index')

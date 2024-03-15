@@ -35,6 +35,7 @@ class Bouquet(models.Model):
         on_delete=models.CASCADE,
         related_name='bouquets'
     )
+    sell_counter = models.IntegerField(verbose_name='Количество продаж', default=0)
 
     class Meta:
         verbose_name = 'Букет'
@@ -137,3 +138,5 @@ class Budget(models.Model):
 
     def __str__(self):
         return self.budget_level
+
+
