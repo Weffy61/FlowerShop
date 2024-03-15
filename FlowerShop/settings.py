@@ -12,9 +12,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 YOOKASSA_SECRET_KEY = env.str('YOOKASSA_SECRET_KEY')
 YOOKASSA_SHOP_ID = env.int('YOOKASSA_SHOP_ID')
 TELEGRAM_BOT_API = env.str('TELEGRAM_BOT_API')
-
 SECRET_KEY = env.str('SECRET_KEY')
-
+TG_GROUP_ID = env.int('GROUP_ID')
 
 DEBUG = env.bool('DEBUG', True)
 

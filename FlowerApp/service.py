@@ -57,6 +57,7 @@ def send_message_to_courier_bot(order_id):
         Время доставки: {delivery_time}
         ''')
     bot.send_message(courier.tg_id, text=message)
+    bot.send_message(settings.TG_GROUP_ID, text=message)
     courier.status = 'busy'
     courier.order = order
     courier.save()
