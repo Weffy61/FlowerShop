@@ -14,6 +14,7 @@ class BouquetAdmin(admin.ModelAdmin):
               'category', 'budget']
     raw_id_fields = ['category', 'budget']
     list_display = ['name', 'price']
+    readonly_fields = ['sell_counter']
 
 
 @admin.register(BouquetCategory)
@@ -45,4 +46,3 @@ class ConsultationRequestAdmin(admin.ModelAdmin):
 @admin.register(Budget)
 class BudgetAdmin(admin.ModelAdmin):
     fields = ['budget_level', 'budget_from', 'budget_up_to']
-    readonly_fields = ['sell_counter']
